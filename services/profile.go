@@ -60,3 +60,27 @@ func EditProfile(userID uint, updateData map[string]any) *gorm.DB {
 	result := global.DB.Model(&model.User{}).Where("id = ?", userID).Updates(updateData)
 	return result
 }
+
+func ListFavoritePeople(userID uint) ([]gin.H, *gorm.DB) {
+	var user model.User
+	var followedUserData []gin.H
+	result := global.DB.Model(&model.User{}).Preload("FollowedUsers").Where("id = ?", userID).Take(&user)
+
+	for _, user := range user.FollowedUsers {
+		followedUserData = append(followedUserData, gin.H{
+			"id":          user.Model.ID,
+			"username":    user.Username,
+			"name":        user.Name,
+			"tel":         user.Tel,
+			"shortTitle":  user.ShortTitle,
+			"jobTitle":    user.JobTitle,
+			"point":       user.Point,
+			"sex":         user.Sex,
+			"avatarUrl":   user.AvatarUrl,
+			"role":        user.Role,
+			"description": user.Description,
+		})
+	}
+
+	return followedUserData, result
+}

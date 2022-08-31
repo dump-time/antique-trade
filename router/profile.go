@@ -12,6 +12,7 @@ func initProfileRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 		profileRouter.GET("/detail/:user_id", controller.ProfileDetailController)
 		profileRouter.GET("/list/:role", controller.ProfileListController)
 		profileRouter.POST("/edit", middleware.IsLogined, controller.EditProfileController)
+		profileRouter.GET("/favorite-people", middleware.IsLogined, controller.ListFavoritePeopleController)
 	}
 	return apiGroup
 }

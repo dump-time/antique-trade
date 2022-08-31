@@ -119,3 +119,19 @@ func EditProfileController(context *gin.Context) {
 
 	util.SuccessResp(context, nil)
 }
+
+func ListFavoritePeopleController(context *gin.Context) {
+	userID := sessions.Default(context).Get("id").(uint)
+	favoritePeopleData, result := services.ListFavoritePeople(userID)
+	if result.Error != nil {
+		log.Error(result.Error)
+		if result.RowsAffected == 0 {
+			util.NotFoundResp(context)
+		} else {
+			util.InternalErrResp(context)
+		}
+		return
+	}
+
+	util.SuccessResp(context, favoritePeopleData)
+}
