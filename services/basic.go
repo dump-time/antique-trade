@@ -7,11 +7,13 @@ import (
 	"github.com/dump-time/antique-trade/model"
 )
 
-func RegisterUser(username string, password string, role string) error {
+func RegisterUser(username string, password string, role string, sex string, tel string) error {
 	user := model.User{
 		Username: username,
 		Password: password,
 		Role:     role,
+		Sex:      sex,
+		Tel:      tel,
 	}
 	result := global.DB.Create(&user)
 	return result.Error

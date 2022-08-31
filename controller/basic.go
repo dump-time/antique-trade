@@ -12,6 +12,8 @@ type RegisterData struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Role     string `json:"role" binding:"required"`
+	Tel      string `json:"tel" binding:"required"`
+	Sex      string `json:"sex" binding:"required"`
 }
 
 type LoginData struct {
@@ -51,7 +53,13 @@ func RegisterController(context *gin.Context) {
 		return
 	}
 
-	if err := services.RegisterUser(registerData.Username, registerData.Password, registerData.Role); err != nil {
+	if err := services.RegisterUser(
+		registerData.Username,
+		registerData.Password,
+		registerData.Role,
+		registerData.Sex,
+		registerData.Tel,
+	); err != nil {
 		log.Error(err)
 		util.PasswordErrResp(context)
 		return
