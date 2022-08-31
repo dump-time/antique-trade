@@ -14,6 +14,7 @@ func RegisterUser(username string, password string, role string, sex string, tel
 		Role:     role,
 		Sex:      sex,
 		Tel:      tel,
+		Name:     username,
 	}
 	result := global.DB.Create(&user)
 	return result.Error

@@ -45,4 +45,5 @@ func init() {
 	// Setup routers
 	v1 := R.Group("/api/v1")
 	initBasicRouter(v1)
+	initProfileRouter(v1)
 }
