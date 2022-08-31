@@ -1,15 +1,13 @@
 package router
 
 import (
-	"github.com/dump-time/antique-trade/util"
+	"github.com/dump-time/antique-trade/controller"
 	"github.com/gin-gonic/gin"
 )
 
 func initBasicRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
-	apiGroup.GET("/ping", func(ctx *gin.Context) {
-		util.SuccessResp(ctx, gin.H{
-			"ping": "pong",
-		})
-	})
+	// login & register
+	apiGroup.GET("/login", controller.LoginController)
+	apiGroup.POST("/register", controller.RegisterController)
 	return apiGroup
 }
