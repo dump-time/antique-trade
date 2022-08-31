@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"github.com/dump-time/antique-trade/global"
 	"github.com/dump-time/antique-trade/log"
-	"github.com/dump-time/antique-trade/model"
+	"github.com/dump-time/antique-trade/services"
 	"github.com/dump-time/antique-trade/util"
 	"github.com/gin-gonic/gin"
 )
@@ -31,15 +30,8 @@ func RegisterController(context *gin.Context) {
 		return
 	}
 
-	user := model.User{
-		Username: registerData.Username,
-		Password: registerData.Password,
-		Role:     registerData.Role,
-	}
-
-	result := global.DB.Create(&user)
-	if result.Error != nil {
-		log.Error(result.Error)
+	if err := services.RegisterUser(registerData.Username, registerData.Password, registerData.Role); err != nil {
+		log.Error(err)
 		util.InternalErrResp(context)
 		return
 	}
