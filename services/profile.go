@@ -55,3 +55,8 @@ func FetchProfileList(userID sql.NullInt64, role string) ([]gin.H, *gorm.DB) {
 	}
 	return profileData, result
 }
+
+func EditProfile(userID uint, updateData map[string]any) *gorm.DB {
+	result := global.DB.Model(&model.User{}).Where("id = ?", userID).Updates(updateData)
+	return result
+}

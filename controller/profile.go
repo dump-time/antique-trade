@@ -11,6 +11,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type EditProfileData struct {
+	AvatarURL   string `json:"avatarUrl"`
+	Description string `json:"description"`
+	JobTitle    string `json:"jobTitle"`
+	Name        string `json:"name"`
+	Role        string `json:"role"`
+	Sex         string `json:"sex"`
+	ShortTitle  string `json:"shortTitle"`
+	Tel         string `json:"tel"`
+	Username    string `json:"username"`
+}
+
 func ProfileDetailController(context *gin.Context) {
 	user_id_str := context.Param("user_id")
 	user_id, err := strconv.Atoi(user_id_str)
@@ -72,4 +84,38 @@ func ProfileListController(context *gin.Context) {
 
 	// Generate
 	util.SuccessResp(context, profileData)
+}
+
+func EditProfileController(context *gin.Context) {
+	userID := sessions.Default(context).Get("id").(uint)
+	var editProfileData EditProfileData
+	if err := context.ShouldBindJSON(&editProfileData); err != nil {
+		util.ParamsErrResp(context)
+		log.Error(err)
+		return
+	}
+
+	profileData := map[string]any{
+		"username":    editProfileData.Username,
+		"name":        editProfileData.Name,
+		"tel":         editProfileData.Tel,
+		"short_title": editProfileData.ShortTitle,
+		"job_title":   editProfileData.JobTitle,
+		"sex":         editProfileData.Sex,
+		"avatar_url":  editProfileData.AvatarURL,
+		"role":        editProfileData.Role,
+		"description": editProfileData.Description,
+	}
+
+	if result := services.EditProfile(userID, profileData); result.Error != nil {
+		log.Error(result.Error)
+		if result.RowsAffected == 0 {
+			util.NotFoundResp(context)
+		} else {
+			util.InternalErrResp(context)
+		}
+		return
+	}
+
+	util.SuccessResp(context, nil)
 }
