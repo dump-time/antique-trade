@@ -7,7 +7,7 @@ import (
 
 func initBasicRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 	// login & register
-	apiGroup.GET("/login", controller.LoginController)
+	apiGroup.POST("/login", controller.LoginController)
 	apiGroup.POST("/register", controller.RegisterController)
 	return apiGroup
 }

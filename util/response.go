@@ -43,3 +43,7 @@ func NotFoundResp(context *gin.Context) {
 func InternalErrResp(context *gin.Context) {
 	FailedResp(context, 4005, "Internal error!")
 }
+
+func PasswordErrResp(context *gin.Context) {
+	FailedResp(context, 4006, "Password error")
+}

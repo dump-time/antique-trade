@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/dump-time/antique-trade/global"
 	"github.com/dump-time/antique-trade/model"
 )
@@ -13,4 +15,14 @@ func RegisterUser(username string, password string, role string) error {
 	}
 	result := global.DB.Create(&user)
 	return result.Error
+}
+
+func Login(username string, password string) (model.User, error) {
+	var user model.User
+	global.DB.Where("username = ?", username).Take(&user)
+	if user.Password != password {
+		return model.User{}, errors.New("password error")
+	}
+
+	return user, nil
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/dump-time/antique-trade/log"
 	"github.com/dump-time/antique-trade/services"
 	"github.com/dump-time/antique-trade/util"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +20,27 @@ type LoginData struct {
 }
 
 func LoginController(context *gin.Context) {
+	var loginData LoginData
+	if err := context.ShouldBindJSON(&loginData); err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
 
+	user, err := services.Login(loginData.Username, loginData.Password)
+	if err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
+
+	// Cache user session data after login success
+	session := sessions.Default(context)
+	session.Set("username", user.Username)
+	session.Set("role", user.Role)
+	session.Save()
+
+	util.SuccessResp(context, nil)
 }
 
 func RegisterController(context *gin.Context) {
@@ -32,7 +53,7 @@ func RegisterController(context *gin.Context) {
 
 	if err := services.RegisterUser(registerData.Username, registerData.Password, registerData.Role); err != nil {
 		log.Error(err)
-		util.InternalErrResp(context)
+		util.PasswordErrResp(context)
 		return
 	}
 
