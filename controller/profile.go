@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"database/sql"
 	"strconv"
 
 	"github.com/dump-time/antique-trade/log"
 	"github.com/dump-time/antique-trade/services"
 	"github.com/dump-time/antique-trade/util"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,5 +46,30 @@ func ProfileDetailController(context *gin.Context) {
 }
 
 func ProfileListController(context *gin.Context) {
+	var userIDNullable sql.NullInt64
 
+	userID := sessions.Default(context).Get("id")
+	role := context.Param("role")
+	if userID == nil {
+		userIDNullable.Valid = false
+	} else {
+		userIDNullable.Valid = true
+		userIDNullable.Int64 = int64(userID.(uint))
+	}
+
+	log.Info(userIDNullable) // debug
+
+	profileData, result := services.FetchProfileList(userIDNullable, role)
+	if result.Error != nil {
+		log.Error(result.Error)
+		if result.RowsAffected == 0 {
+			util.NotFoundResp(context)
+		} else {
+			util.InternalErrResp(context)
+		}
+		return
+	}
+
+	// Generate
+	util.SuccessResp(context, profileData)
 }
