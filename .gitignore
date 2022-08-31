@@ -17,6 +17,9 @@
 # dist files
 dist/
 
+# mac os file
+.DS_Store
+
 # IDE/Editor
 .idea/
 .vscode/

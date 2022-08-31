@@ -1,17 +1,36 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
+	"net"
+	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/dump-time/antique-trade/global"
+	"github.com/dump-time/antique-trade/log"
+	"github.com/dump-time/antique-trade/router"
+	"github.com/fvbock/endless"
 )
 
 func main() {
-  r := gin.Default()
-  r.GET("/ping", func(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{
-      "message": "pong",
-    })
-  })
-  r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	// Start server gracefully
+	server := endless.NewServer(global.Config.Serv.Addr, router.R)
+
+	// daemon mode
+	if global.CmdOpts.DaemonMode {
+		server.BeforeBegin = func(add string) {
+			// stdout pid
+			pid := os.Getpid()
+			log.Info(fmt.Sprintf("Deamon started: %v", pid))
+		}
+	}
+
+	// Start server
+	if err := server.ListenAndServe(); err != nil {
+		switch err.(type) {
+		case *net.OpError:
+			log.Warn(err)
+		default:
+			log.Fatal(err)
+		}
+	}
 }
