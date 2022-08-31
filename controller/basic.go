@@ -32,17 +32,19 @@ func LoginController(context *gin.Context) {
 	user, err := services.Login(loginData.Username, loginData.Password)
 	if err != nil {
 		log.Error(err)
-		util.ParamsErrResp(context)
+		util.PasswordErrResp(context)
 		return
 	}
 
 	// Cache user session data after login success
 	session := sessions.Default(context)
-	session.Set("username", user.Username)
+	session.Set("id", user.Model.ID)
 	session.Set("role", user.Role)
 	session.Save()
 
-	util.SuccessResp(context, nil)
+	util.SuccessResp(context, gin.H{
+		"id": user.Model.ID,
+	})
 }
 
 func RegisterController(context *gin.Context) {
