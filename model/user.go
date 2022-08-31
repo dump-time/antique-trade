@@ -16,4 +16,7 @@ type User struct {
 	Sex         string
 	AvatarUrl   string // 头像
 	Description string // 简介
+
+	// Many to many relations
+	FavoritePosts []Post `gorm:"many2many:user_post;"`
 }
