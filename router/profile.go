@@ -9,6 +9,7 @@ func initProfileRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 	profileRouter := apiGroup.Group("/profile")
 	{
 		profileRouter.GET("/detail/:user_id", controller.ProfileDetailController)
+		profileRouter.GET("/list/:role", controller.ProfileListController)
 	}
 	return apiGroup
 }

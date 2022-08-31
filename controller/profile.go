@@ -42,3 +42,7 @@ func ProfileDetailController(context *gin.Context) {
 		"description": user.Description,
 	})
 }
+
+func ProfileListController(context *gin.Context) {
+
+}
