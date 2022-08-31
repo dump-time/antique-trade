@@ -1,0 +1,38 @@
+name: deploy
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Build
+        run: make build
+
+      - name: Upload program to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.LAMBO_SERVER_SSH_PRIVATE_KEY }}
+          ARGS: "-rltgoDzvO"
+          SOURCE: ""
+          REMOTE_HOST: ${{ secrets.LAMBO_SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.LAMBO_SERVER_USER }}
+          TARGET: ${{ secrets.LAMBO_SERVER_TARGET }}
+          EXCLUDE: ""
+
+      - name: run server program on LAMBO's remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LAMBO_SERVER_HOST }}
+          username: ${{ secrets.LAMBO_SERVER_USER }}
+          key: ${{ secrets.LAMBO_SERVER_SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.LAMBO_SERVER_TARGET }}
+            make start
