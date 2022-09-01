@@ -46,5 +46,6 @@ func init() {
 	v1 := R.Group("/api/v1")
 	initBasicRouter(v1)
 	initProfileRouter(v1)
+	initForumRouter(v1)
 	initImageRouter(v1)
 }

@@ -8,6 +8,9 @@ import (
 func init() {
 	err := global.DB.AutoMigrate(
 		&User{},
+		&Post{},
+		&Comment{},
+		&Product{},
 	)
 	if err != nil {
 		log.Fatal(err)
