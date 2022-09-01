@@ -47,4 +47,5 @@ func init() {
 	initBasicRouter(v1)
 	initProfileRouter(v1)
 	initImageRouter(v1)
+	initArticleRouter(v1)
 }
