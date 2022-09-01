@@ -18,7 +18,7 @@ func CreateProduct(uid uint, title string, price float64, description string, ca
 	return result.Error
 }
 
-type ListAllProductData struct {
+type ListAllProduct struct {
 	ID              uint    `json:"id"`
 	Title           string  `json:"title"`
 	Price           float64 `json:"price"`
@@ -28,14 +28,14 @@ type ListAllProductData struct {
 	UserID          uint    `json:"user_id"`
 }
 
-func ListAllProducts() ([]ListAllProductData, error) {
-	var products []ListAllProductData
+func ListAllProducts() ([]ListAllProduct, error) {
+	var products []ListAllProduct
 	result := global.DB.Model(&model.Product{}).Find(&products)
 
 	return products, result.Error
 }
 
-type ListByUIDProductData struct {
+type ListByUIDProduct struct {
 	ID              uint    `json:"id"`
 	Title           string  `json:"title"`
 	Price           float64 `json:"price"`
@@ -44,14 +44,14 @@ type ListByUIDProductData struct {
 	PrimaryImageURL string  `json:"primary_image_url"`
 }
 
-func ListProductsByUID(uid uint) ([]ListByUIDProductData, error) {
-	var products []ListByUIDProductData
+func ListProductsByUID(uid uint) ([]ListByUIDProduct, error) {
+	var products []ListByUIDProduct
 	result := global.DB.Model(&model.Product{}).Where("user_id = ?", uid).Find(&products)
 
 	return products, result.Error
 }
 
-type ListByCategoryProductData struct {
+type ListByCategoryProduct struct {
 	ID              uint    `json:"id"`
 	Title           string  `json:"title"`
 	Price           float64 `json:"price"`
@@ -60,8 +60,8 @@ type ListByCategoryProductData struct {
 	UserID          uint    `json:"user_id"`
 }
 
-func ListProductsByCategory(category string) ([]ListByCategoryProductData, error) {
-	var products []ListByCategoryProductData
+func ListProductsByCategory(category string) ([]ListByCategoryProduct, error) {
+	var products []ListByCategoryProduct
 	result := global.DB.Model(&model.Product{}).Where("category = ?", category).Find(&products)
 
 	return products, result.Error

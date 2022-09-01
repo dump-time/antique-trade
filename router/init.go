@@ -50,4 +50,5 @@ func init() {
 	initImageRouter(v1)
 	initStoreRouter(v1)
 	initArticleRouter(v1)
+	initCartRouter(v1)
 }

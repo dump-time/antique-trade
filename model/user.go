@@ -21,6 +21,7 @@ type User struct {
 	Articles []*Article
 
 	// Many to many relations
-	FavoriteArticles []*Article `gorm:"many2many:user_article;"`
+	FavoriteArticles []*Article `gorm:"many2many:user_article"`
 	FollowedUsers    []*User    `gorm:"many2many:user_followed"`
+	CartProducts     []*Product `gorm:"many2many:user_cart"`
 }
