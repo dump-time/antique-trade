@@ -10,6 +10,7 @@ import (
 type configType struct {
 	Serv struct {
 		Addr           string
+		Host           string
 		TrustedProxies []string `yaml:"proxies"`
 	}
 	DB struct {
