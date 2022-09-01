@@ -10,4 +10,6 @@ type Article struct {
 	PimaryImageURL string // 主图链接内容
 	UserID         uint   // 作者
 	User           User   // 作者
+
+	Products []Product `gorm:"many2many:articles_products;"`
 }

@@ -122,3 +122,62 @@ func ListArticles(userID sql.NullInt64) ([]gin.H, error) {
 
 	return articleDatas, err
 }
+
+func GetArticleDetail(userID sql.NullInt64, articleID int) (gin.H, error) {
+	var resultArticle model.Article
+	result := global.DB.Model(&model.Article{}).Preload("Products").Where("id = ?", articleID).Take(&resultArticle)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	var user model.User
+	if err := global.DB.Model(&resultArticle).Association("User").Find(&user); err != nil {
+		return nil, err
+	}
+
+	// Extract products data
+	var products []gin.H
+	for _, product := range resultArticle.Products {
+		products = append(products, gin.H{
+			"id":              product.ID,
+			"title":           product.Title,
+			"price":           product.Price,
+			"description":     product.Description,
+			"primaryImageURL": product.PrimaryImageURL,
+			"category":        product.Category,
+			"userID":          product.UserID,
+		})
+	}
+
+	// Generate result data
+	var resultData = gin.H{
+		"title":           resultArticle.Title,
+		"content":         resultArticle.Content,
+		"primaryImageURL": resultArticle.PimaryImageURL,
+		"writer": gin.H{
+			"id":          user.Model.ID,
+			"username":    user.Username,
+			"name":        user.Name,
+			"tel":         user.Tel,
+			"shortTitle":  user.ShortTitle,
+			"jobTitle":    user.JobTitle,
+			"point":       user.Point,
+			"sex":         user.Sex,
+			"avatarUrl":   user.AvatarUrl,
+			"role":        user.Role,
+			"description": user.Description,
+		},
+	}
+	resultData["products"] = products
+
+	count := global.DB.
+		Model(&model.User{Model: gorm.Model{ID: uint(userID.Int64)}}).
+		Where("user_article.user_id = ? and user_article.article_id = ?", userID, articleID).
+		Association("FavoriteArticles").Count()
+	if count == 0 {
+		resultData["isMarked"] = false
+	} else {
+		resultData["isMarked"] = true
+	}
+
+	return resultData, result.Error
+}

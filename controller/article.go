@@ -108,3 +108,31 @@ func ListArticlesController(context *gin.Context) {
 
 	util.SuccessResp(context, articles)
 }
+
+func ArticleDetailController(context *gin.Context) {
+	articleIDStr := context.Param("id")
+	articleID, err := strconv.Atoi(articleIDStr)
+	if err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
+
+	var userIDNuallable sql.NullInt64
+	userID := sessions.Default(context).Get("id")
+	if userID == nil {
+		userIDNuallable.Valid = false
+	} else {
+		userIDNuallable.Valid = true
+		userIDNuallable.Int64 = int64(userID.(uint))
+	}
+
+	articleData, err := services.GetArticleDetail(userIDNuallable, articleID)
+	if err != nil {
+		log.Error(err)
+		util.InternalErrResp(context)
+		return
+	}
+
+	util.SuccessResp(context, articleData)
+}

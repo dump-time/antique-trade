@@ -14,6 +14,7 @@ func initArticleRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 		articleRouter.GET("/unmark/:id", middleware.IsLogined, controller.UnMarkArticleController)
 		articleRouter.GET("/list-favorite", middleware.IsLogined, controller.ListFavoriteArticleController)
 		articleRouter.GET("/list", controller.ListArticlesController)
+		articleRouter.GET("/detail/:id", controller.ArticleDetailController)
 	}
 	return articleRouter
 }
