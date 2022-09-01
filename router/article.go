@@ -10,6 +10,8 @@ func initArticleRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 	articleRouter := apiGroup.Group("/article")
 	{
 		articleRouter.POST("/add", middleware.IsLogined, controller.AddArticleController)
+		articleRouter.GET("/mark/:id", middleware.IsLogined, controller.MarkArticleController)
+		articleRouter.GET("/unmark/:id", middleware.IsLogined, controller.UnMarkArticleController)
 	}
 	return articleRouter
 }

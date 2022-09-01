@@ -16,3 +16,11 @@ func AddArticle(title string, content string, primaryImageUrl string, writerID u
 
 	return result
 }
+
+func MarkArticle(userID uint, articleID uint) error {
+	err := global.DB.
+		Model(&model.User{Model: gorm.Model{ID: userID}}).
+		Association("FavoritePosts").
+		Append(&model.Article{Model: gorm.Model{ID: articleID}})
+	return err
+}

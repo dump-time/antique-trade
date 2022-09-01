@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"github.com/dump-time/antique-trade/log"
 	"github.com/dump-time/antique-trade/services"
 	"github.com/dump-time/antique-trade/util"
@@ -35,4 +37,26 @@ func AddArticleController(context *gin.Context) {
 	}
 
 	util.SuccessResp(context, nil)
+}
+
+func MarkArticleController(context *gin.Context) {
+	articleID, err := strconv.Atoi(context.Param("id"))
+	if err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
+	userID := sessions.Default(context).Get("id").(uint)
+
+	if err := services.MarkArticle(userID, uint(articleID)); err != nil {
+		util.InternalErrResp(context)
+		log.Error(err)
+		return
+	}
+
+	util.SuccessResp(context, nil)
+}
+
+func UnMarkArticleController(context *gin.Context) {
+
 }
