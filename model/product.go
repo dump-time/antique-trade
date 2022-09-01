@@ -9,6 +9,6 @@ type Product struct {
 	Price           float64 // 价格
 	Description     string  // 描述
 	PrimaryImageURL string  // 主图链接
-
-	UserID uint // 发布人 ID
+	Category        string  // 分类 (regular/NFT)
+	UserID          uint    // 发布人 ID
 }

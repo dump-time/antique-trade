@@ -13,6 +13,7 @@ func initStoreRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 		storeRouter.POST("/add", middleware.IsLogined, controller.ProductAddController)
 		storeRouter.GET("/list", controller.ProductsListAllController)
 		storeRouter.GET("/list/:uid", controller.ProductListByUIDController)
+		storeRouter.GET("/category/:category", controller.ProductListByCategoryController)
 	}
 
 	return storeRouter
