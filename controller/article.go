@@ -74,3 +74,15 @@ func UnMarkArticleController(context *gin.Context) {
 
 	util.SuccessResp(context, nil)
 }
+
+func ListFavoriteArticleController(context *gin.Context) {
+	userID := sessions.Default(context).Get("id").(uint)
+	articles, err := services.ListFavoriteArticle(userID)
+	if err != nil {
+		log.Error(err.Error)
+		util.InternalErrResp(context)
+		return
+	}
+
+	util.SuccessResp(context, articles)
+}

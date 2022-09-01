@@ -18,6 +18,6 @@ type User struct {
 	Description string // 简介
 
 	// Many to many relations
-	FavoritePosts []*Article `gorm:"many2many:user_article;"`
-	FollowedUsers []*User    `gorm:"many2many:user_followed"`
+	FavoriteArticles []*Article `gorm:"many2many:user_article;"`
+	FollowedUsers    []*User    `gorm:"many2many:user_followed"`
 }
