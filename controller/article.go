@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"database/sql"
 	"strconv"
 
 	"github.com/dump-time/antique-trade/log"
@@ -78,6 +79,27 @@ func UnMarkArticleController(context *gin.Context) {
 func ListFavoriteArticleController(context *gin.Context) {
 	userID := sessions.Default(context).Get("id").(uint)
 	articles, err := services.ListFavoriteArticle(userID)
+	if err != nil {
+		log.Error(err.Error)
+		util.InternalErrResp(context)
+		return
+	}
+
+	util.SuccessResp(context, articles)
+}
+
+func ListArticlesController(context *gin.Context) {
+	var userID sql.NullInt64
+
+	userIDData := sessions.Default(context).Get("id")
+	if userIDData == nil {
+		userID.Valid = false
+	} else {
+		userID.Int64 = int64(userIDData.(uint))
+		userID.Valid = true
+	}
+
+	articles, err := services.ListArticles(userID)
 	if err != nil {
 		log.Error(err.Error)
 		util.InternalErrResp(context)

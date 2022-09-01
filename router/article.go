@@ -13,6 +13,7 @@ func initArticleRouter(apiGroup *gin.RouterGroup) *gin.RouterGroup {
 		articleRouter.GET("/mark/:id", middleware.IsLogined, controller.MarkArticleController)
 		articleRouter.GET("/unmark/:id", middleware.IsLogined, controller.UnMarkArticleController)
 		articleRouter.GET("/list-favorite", middleware.IsLogined, controller.ListFavoriteArticleController)
+		articleRouter.GET("/list", controller.ListArticlesController)
 	}
 	return articleRouter
 }
