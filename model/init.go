@@ -8,7 +8,7 @@ import (
 func init() {
 	err := global.DB.AutoMigrate(
 		&User{},
-		&Forum{},
+		&Post{},
 		&Comment{},
 		&Product{},
 	)

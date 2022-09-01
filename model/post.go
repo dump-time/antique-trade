@@ -2,7 +2,7 @@ package model
 
 import "gorm.io/gorm"
 
-type Forum struct {
+type Post struct {
 	gorm.Model
 
 	Content  string // 内容
@@ -11,5 +11,5 @@ type Forum struct {
 
 	WriterID uint // 发布人 ID
 
-	Comments []*Comment `gorm:"foreignkey:ForumID"`
+	Comments []*Comment `gorm:"foreignkey:PostID"`
 }

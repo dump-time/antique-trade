@@ -9,5 +9,5 @@ type Comment struct {
 
 	WriterID uint // 发布人 ID
 
-	ForumID uint // 外键
+	PostID uint // 外键
 }
