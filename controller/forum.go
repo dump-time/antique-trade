@@ -48,9 +48,9 @@ func PostListController(ctx *gin.Context) {
 
 		for _, comment := range comments {
 			commentResp = append(commentResp, map[string]interface{}{
-				"id":      comment.ID,
-				"content": comment.Content,
-				"writer":  comment.WriterID,
+				"id":        comment.ID,
+				"content":   comment.Content,
+				"writer_id": comment.WriterID,
 			})
 		}
 
@@ -59,7 +59,7 @@ func PostListController(ctx *gin.Context) {
 			"content":   post.Content,
 			"image_url": post.ImageURL,
 			"file_url":  post.FileURL,
-			"writer":    post.WriterID,
+			"writer_id": post.WriterID,
 			"comments":  commentResp,
 		})
 	}
