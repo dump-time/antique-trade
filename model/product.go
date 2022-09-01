@@ -10,5 +10,5 @@ type Product struct {
 	Description     string  // 描述
 	PrimaryImageURL string  // 主图链接
 
-	WriterID uint // 发布人 ID
+	UserID uint // 发布人 ID
 }

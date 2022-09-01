@@ -48,4 +48,5 @@ func init() {
 	initProfileRouter(v1)
 	initForumRouter(v1)
 	initImageRouter(v1)
+	initStoreRouter(v1)
 }
