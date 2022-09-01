@@ -13,6 +13,7 @@ type ProductAddRequest struct {
 	Title           string  `json:"title"`
 	Price           float64 `json:"price"`
 	Description     string  `json:"description"`
+	Category        string  `json:"category"`
 	PrimaryImageURL string  `json:"primary_image_url"`
 }
 
@@ -25,7 +26,7 @@ func ProductAddController(ctx *gin.Context) {
 		return
 	}
 
-	if err := services.CreateProduct(uid, req.Title, req.Price, req.Description, req.PrimaryImageURL); err != nil {
+	if err := services.CreateProduct(uid, req.Title, req.Price, req.Description, req.Category, req.PrimaryImageURL); err != nil {
 		util.InternalErrResp(ctx)
 		return
 	}
@@ -53,6 +54,18 @@ func ProductListByUIDController(ctx *gin.Context) {
 	}
 
 	products, err := services.ListProductsByUID(uint(uid))
+	if err != nil {
+		util.InternalErrResp(ctx)
+		return
+	}
+
+	util.SuccessResp(ctx, products)
+}
+
+func ProductListByCategoryController(ctx *gin.Context) {
+	category := ctx.Param("category")
+
+	products, err := services.ListProductsByCategory(category)
 	if err != nil {
 		util.InternalErrResp(ctx)
 		return
