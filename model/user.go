@@ -17,7 +17,10 @@ type User struct {
 	AvatarUrl   string // 头像
 	Description string // 简介
 
+	// Has many relations
+	Articles []*Article
+
 	// Many to many relations
-	FavoritePosts []*Article `gorm:"many2many:user_article;"`
-	FollowedUsers []*User    `gorm:"many2many:user_followed"`
+	FavoriteArticles []*Article `gorm:"many2many:user_article;"`
+	FollowedUsers    []*User    `gorm:"many2many:user_followed"`
 }
