@@ -84,3 +84,19 @@ func ListFavoritePeople(userID uint) ([]gin.H, *gorm.DB) {
 
 	return followedUserData, result
 }
+
+func FollowUser(userID uint, followedUserID uint) error {
+	err := global.DB.
+		Model(&model.User{Model: gorm.Model{ID: userID}}).
+		Association("FollowedUsers").
+		Append(&model.User{Model: gorm.Model{ID: followedUserID}})
+	return err
+}
+
+func UnFollowUser(userID uint, followedUserID uint) error {
+	err := global.DB.
+		Model(&model.User{Model: gorm.Model{ID: userID}}).
+		Association("FollowedUsers").
+		Delete(&model.User{Model: gorm.Model{ID: followedUserID}})
+	return err
+}
