@@ -58,5 +58,19 @@ func MarkArticleController(context *gin.Context) {
 }
 
 func UnMarkArticleController(context *gin.Context) {
+	articleID, err := strconv.Atoi(context.Param("id"))
+	if err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
+	userID := sessions.Default(context).Get("id").(uint)
 
+	if err := services.UnMarkArticle(userID, uint(articleID)); err != nil {
+		util.InternalErrResp(context)
+		log.Error(err)
+		return
+	}
+
+	util.SuccessResp(context, nil)
 }

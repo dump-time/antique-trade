@@ -24,3 +24,11 @@ func MarkArticle(userID uint, articleID uint) error {
 		Append(&model.Article{Model: gorm.Model{ID: articleID}})
 	return err
 }
+
+func UnMarkArticle(userID uint, articleID uint) error {
+	err := global.DB.
+		Model(&model.User{Model: gorm.Model{ID: userID}}).
+		Association("FavoritePosts").
+		Delete(&model.Article{Model: gorm.Model{ID: articleID}})
+	return err
+}
