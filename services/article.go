@@ -7,15 +7,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func AddArticle(title string, content string, primaryImageUrl string, writerID uint) *gorm.DB {
-	result := global.DB.Create(&model.Article{
+func AddArticle(title string, content string, primaryImageUrl string, writerID uint) error {
+	article := model.Article{
 		Title:          title,
 		Content:        content,
 		PimaryImageURL: primaryImageUrl,
-		WriterID:       writerID,
-	})
+		UserID:         writerID,
+	}
+	if err := global.DB.Create(&article).Error; err != nil {
+		return err
+	}
 
-	return result
+	return nil
 }
 
 func MarkArticle(userID uint, articleID uint) error {
@@ -35,17 +38,37 @@ func UnMarkArticle(userID uint, articleID uint) error {
 }
 
 func ListFavoriteArticle(userID uint) ([]gin.H, error) {
-	user := model.User{Model: gorm.Model{ID: userID}}
-	var favoriteArticles []model.Article
-	err := global.DB.Model(&user).Association("FavoriteArticles").Find(&favoriteArticles)
+	type resultData struct {
+		model.Article
+		model.User
+	}
+	var result []resultData
+
+	err := global.DB.Model(&model.User{}).
+		Select("articles.*, users.*").
+		Joins("inner join articles on articles.user_id = users.id inner join user_article on user_article.article_id = articles.id and user_article.user_id = ?", userID).
+		Find(&result).Error
 	var favoriteArticleData []gin.H
 
-	for _, article := range favoriteArticles {
+	for _, data := range result {
 		favoriteArticleData = append(favoriteArticleData, gin.H{
-			"id":              article.Model.ID,
-			"title":           article.Title,
-			"content":         article.Content,
-			"primaryImageURL": article.PimaryImageURL,
+			"id":              data.Article.Model.ID,
+			"title":           data.Article.Title,
+			"content":         data.Article.Content,
+			"primaryImageURL": data.Article.PimaryImageURL,
+			"writer": gin.H{
+				"id":          data.User.Model.ID,
+				"username":    data.User.Username,
+				"name":        data.User.Name,
+				"tel":         data.User.Tel,
+				"shortTitle":  data.User.ShortTitle,
+				"jobTitle":    data.User.JobTitle,
+				"point":       data.User.Point,
+				"sex":         data.User.Sex,
+				"avatarUrl":   data.User.AvatarUrl,
+				"role":        data.User.Role,
+				"description": data.User.Description,
+			},
 		})
 	}
 

@@ -8,5 +8,6 @@ type Article struct {
 	Title          string // 标题
 	Content        string // 内容
 	PimaryImageURL string // 主图链接内容
-	WriterID       uint   // 发布人 ID
+	UserID         uint   // 作者
+	User           User   // 作者
 }

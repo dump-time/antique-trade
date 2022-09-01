@@ -25,13 +25,13 @@ func AddArticleController(context *gin.Context) {
 	}
 	userID := sessions.Default(context).Get("id").(uint)
 
-	if result := services.AddArticle(
+	if err := services.AddArticle(
 		articleData.Title,
 		articleData.Content,
 		articleData.PrimaryImageURL,
 		userID,
-	); result.Error != nil {
-		log.Error(result.Error)
+	); err != nil {
+		log.Error(err)
 		util.InternalErrResp(context)
 		return
 	}
