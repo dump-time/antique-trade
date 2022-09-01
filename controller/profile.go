@@ -135,3 +135,39 @@ func ListFavoritePeopleController(context *gin.Context) {
 
 	util.SuccessResp(context, favoritePeopleData)
 }
+
+func FollowController(context *gin.Context) {
+	followedUserID, err := strconv.Atoi(context.Param("id"))
+	if err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
+	userID := sessions.Default(context).Get("id").(uint)
+
+	if err := services.FollowUser(userID, uint(followedUserID)); err != nil {
+		util.InternalErrResp(context)
+		log.Error(err)
+		return
+	}
+
+	util.SuccessResp(context, nil)
+}
+
+func UnfollowController(context *gin.Context) {
+	followedUserID, err := strconv.Atoi(context.Param("id"))
+	if err != nil {
+		log.Error(err)
+		util.ParamsErrResp(context)
+		return
+	}
+	userID := sessions.Default(context).Get("id").(uint)
+
+	if err := services.UnFollowUser(userID, uint(followedUserID)); err != nil {
+		util.InternalErrResp(context)
+		log.Error(err)
+		return
+	}
+
+	util.SuccessResp(context, nil)
+}
